@@ -145,12 +145,11 @@ class Player {
       var weaponEquip = this.getPack().indexOf(itemToEquip);
 
       if( itemToEquip instanceof Weapon ){
-        // this.equipped = itemToEquip;
         if( itemToEquip instanceof Weapon && weaponEquip !== -1){
           if(this.equipped !== false){
             this.getPack().splice(weaponEquip, 1, this.equipped);
             this.equipped = itemToEquip;
-          }else if(this.equipped === false && itemToEquip instanceof Weapon){
+          }else if( itemToEquip instanceof Weapon && this.equipped === false ){
             this.getPack().splice(weaponEquip, 1);
             this.equipped = itemToEquip;
           }else{
@@ -158,15 +157,38 @@ class Player {
           }
         }
       }
-
-
-
-
-
-
-
     };
-}
+
+    eat(itemToEat){
+       var foodToEat = this.getPack().indexOf(itemToEat);
+
+       if( itemToEat instanceof Food){
+        if( itemToEat instanceof Food && foodToEat !== -1){
+          this.getPack().splice(foodToEat, 1);
+          this.health += itemToEat.energy
+        }
+        if(this.health >= this._maxHealth){
+          this.health = this._maxHealth;
+        }else{
+          return false
+        }
+       }
+    };
+
+    useItem(item){
+      var itemToUse = this.getPack().indexOf(item);
+
+      if( item instanceof Weapon ){
+        this.equip(item);
+      }
+      if ( item instanceof Food ){
+        this.eat(item);
+      }else{
+        return false;
+      }
+    };
+
+};
 
 /**
  * Player Class Method => checkPack()
