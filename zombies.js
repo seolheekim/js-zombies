@@ -139,9 +139,33 @@ class Player {
         console.log(this.name + " removing " + item.name + " from the pack");
         return true;
       }
+    };
 
-    }
+    equip(itemToEquip){
+      var weaponEquip = this.getPack().indexOf(itemToEquip);
 
+      if( itemToEquip instanceof Weapon ){
+        // this.equipped = itemToEquip;
+        if( itemToEquip instanceof Weapon && weaponEquip !== -1){
+          if(this.equipped !== false){
+            this.getPack().splice(weaponEquip, 1, this.equipped);
+            this.equipped = itemToEquip;
+          }else if(this.equipped === false && itemToEquip instanceof Weapon){
+            this.getPack().splice(weaponEquip, 1);
+            this.equipped = itemToEquip;
+          }else{
+            return false;
+          }
+        }
+      }
+
+
+
+
+
+
+
+    };
 }
 
 /**
