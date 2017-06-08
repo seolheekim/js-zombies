@@ -115,6 +115,20 @@ class Player {
       return this._maxHealth;
     };
 
+    checkPack(){
+      console.log(this.getPack());
+    }
+
+    takeItem(item){
+      if(this.getPack().length >= 3){
+        console.log(this.name + " you can't take anymore items");
+        return false;
+      }else if(this.getPack().length <= 3){
+        this.getPack().push(item);
+        console.log(this.name + " you have everything you need!");
+        return true;
+      }
+    }
 }
 
 /**
