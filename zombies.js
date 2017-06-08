@@ -117,7 +117,7 @@ class Player {
 
     checkPack(){
       console.log(this.getPack());
-    }
+    };
 
     takeItem(item){
       if(this.getPack().length >= 3){
@@ -128,7 +128,20 @@ class Player {
         console.log(this.name + " you have everything you need!");
         return true;
       }
+    };
+
+    discardItem(item){
+      if(this.getPack().indexOf(item) === -1){
+        console.log(this.name + " nothing was discard from the pack");
+        return false;
+      }else{
+        this.getPack().splice(this.getPack().indexOf(item), 1);
+        console.log(this.name + " removing " + item.name + " from the pack");
+        return true;
+      }
+
     }
+
 }
 
 /**
