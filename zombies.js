@@ -28,16 +28,20 @@ function Item(name){
  * @property {number} damage
  */
 
+function Weapon(name, damage){
+  this.damage = damage;
+  Item.call(this, name);
+}
 
 /**
  * Weapon Extends Item Class
  * -----------------------------
  */
 
-function Weapon(name, damage){
-  this.damage = damage;
-  Item.call(this, name);
-}
+Weapon.prototype = Object.create( Item.prototype, {
+  constructor: Weapon
+})
+
 
 /**
  * Class => Food(name, energy)
@@ -66,9 +70,9 @@ function Food(name, energy){
  * -----------------------------
  */
 
-Food.prototype = Object.create(Item.prototype, {
+Food.prototype = Object.create( Item.prototype, {
   constructor: Food
-});
+})
 
 /**
  * Class => Player(name, health, strength, speed)
@@ -80,14 +84,17 @@ Food.prototype = Object.create(Item.prototype, {
  * @param {number} health                  The player's health.
  * @param {number} strength                The player's strength.
  * @param {number} speed                   The player's speed.
+
  * @private {array} pack                   Default value should be empty.
  * @private {number} maxHealth             Default value should be set to `health`.
+
  * @property {string} name
  * @property {number} health
  * @property {number} strength
  * @property {number} speed
  * @property {boolean} isAlive             Default value should be `true`.
  * @property {Weapon/boolean} equipped     Default value should be `false`.
+
  * @property {method} getPack              Returns private variable `pack`.
  * @property {method} getMaxHealth         Returns private variable `maxHealth`.
  */
@@ -97,10 +104,21 @@ function Player(name, health, strength, speed){
   this.health = health;
   this.strength = strength;
   this.speed = speed;
+  this.isAlive = true;
+  this.equipped = false;
   this._pack = [];
   this._maxHealth = health;
 
-}
+  this.getPack = function(){
+    return this._pack;
+  };
+
+  this.getMaxHealth = function(){
+    return this._maxHealth
+  };
+
+};
+
 
 /**
  * Player Class Method => checkPack()
@@ -114,6 +132,9 @@ function Player(name, health, strength, speed){
  * @name checkPack
  */
 
+Player.prototype.checkPack = function() {
+  console.log(this.getPack());
+};
 
 /**
  * Player Class Method => takeItem(item)
@@ -133,6 +154,17 @@ function Player(name, health, strength, speed){
  * @return {boolean} true/false     Whether player was able to store item in pack.
  */
 
+Player.prototype.takeItem = function(item){
+  if(this.getPack().length >= 3){
+    console.log(this.name + " You can't take anymore items!");
+    return false;
+  }else if(this.getPack().length <= 3){
+    this.getPack().push(item);
+    console.log(this.name + " You have everything you need!");
+    return true;
+  }
+
+}
 
 /**
  * Player Class Method => discardItem(item)
@@ -160,6 +192,16 @@ function Player(name, health, strength, speed){
  * @return {boolean} true/false     Whether player was able to remove item from pack.
  */
 
+Player.prototype.discardItem = function(item) {
+  if(this.getPack().indexOf(item) === -1){
+    console.log(this.name + " nothing was discared from the pack");
+    return false;
+  }else{
+    this.getPack().splice(this.getPack().indexOf(item), 1);
+    console.log(this.name + " removing " + item.name + " from the pack");
+    return true;
+  }
+}
 
 /**
  * Player Class Method => equip(itemToEquip)
@@ -181,6 +223,32 @@ function Player(name, health, strength, speed){
  * @param {Weapon} itemToEquip  The weapon item to equip.
  */
 
+Player.prototype.equip = function(itemToEquip) {
+
+  var weaponEquip = this.getPack().indexOf(itemToEquip);
+
+  if( itemToEquip instanceof Weapon ){
+    this.equipped = this.getPack(weaponEquip)
+    // this.getPack(weaponEquip);
+  }else{
+    return false;
+  }
+
+
+  if( this.equipped === false ){
+    this.discardItem(weaponEquip);
+    this.equipped = this.getPack(weaponEquip)
+  }else if( weaponEquip !== -1 ){
+    this.equipped = this.getPack(weaponEquip)
+  }else{
+    return false;
+  }
+
+  if( itemToEquip instanceof Weapon ){
+    this.getPack().splice(weaponEquip, 1, this.equipped);
+    this.equipped = itemToEquip;
+  }
+}
 
 /**
  * Player Class Method => eat(itemToEat)
