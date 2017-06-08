@@ -188,6 +188,18 @@ class Player {
       }
     };
 
+    equippedWith(){
+      if(this.equipped === false){
+        console.log(this.name + " you don't have a weapon");
+        return false;
+      }else{
+        console.log(this.name + " you are equipped with a " + this.equipped.name)
+        return this.equipped.name;
+      }
+    };
+
+
+
 };
 
 /**
